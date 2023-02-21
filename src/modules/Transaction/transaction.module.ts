@@ -3,10 +3,10 @@ import { TransactionService } from './transaction.service';
 import { TransactionController } from './transaction.controller';
 import { Transaction } from '../../entity/transaction.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { CategoryService } from '../category/category.service';
+import { CategoryService } from '../Category/category.service';
 import { Category } from 'src/entity/category.entity';
 import { Bank } from 'src/entity/bank.entity';
-import { BankService } from '../bank/bank.service';
+import { BankService } from '../Bank/bank.service';
 
 @Module({
   providers: [TransactionService, CategoryService, BankService],

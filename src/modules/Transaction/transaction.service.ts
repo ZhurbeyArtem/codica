@@ -4,8 +4,8 @@ import { Pagination } from 'src/dto/pagination.dto';
 import { TransactionDto } from 'src/dto/transaction.dto';
 import { Transaction } from 'src/entity/transaction.entity';
 import { Repository } from 'typeorm';
-import { BankService } from '../bank/bank.service';
-import { CategoryService } from '../category/category.service';
+import { BankService } from '../Bank/bank.service';
+import { CategoryService } from '../Category/category.service';
 
 @Injectable()
 export class TransactionService {

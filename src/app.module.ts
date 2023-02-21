@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { BankModule } from './modules/bank/bank.module';
-import { CategoryModule } from './modules/category/category.module';
+import { BankModule } from './modules/Bank/bank.module';
+import { CategoryModule } from './modules/Category/category.module';
 import { StatisticModule } from './modules/Statistic/statistic.module';
 import { TransactionModule } from './modules/Transaction/transaction.module';
 
