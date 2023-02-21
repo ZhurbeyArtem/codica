@@ -136,7 +136,6 @@ export class BankService {
 
       return newBank.raw;
     } catch (e) {
-      console.log('+');
       throw new BankMoneyException();
     }
   }
