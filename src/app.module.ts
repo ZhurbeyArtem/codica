@@ -2,10 +2,9 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BankModule } from './modules/bank/bank.module';
-import { CategoryController } from './modules/category/category.controller';
 import { CategoryModule } from './modules/category/category.module';
 import { StatisticModule } from './modules/Statistic/statistic.module';
-import { TransitionModule } from './modules/transition/transition.module';
+import { TransactionModule } from './modules/Transaction/transaction.module';
 
 @Module({
   imports: [
@@ -25,7 +24,7 @@ import { TransitionModule } from './modules/transition/transition.module';
     }),
     BankModule,
     CategoryModule,
-    TransitionModule,
+    TransactionModule,
     StatisticModule,
   ],
   providers: [],

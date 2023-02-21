@@ -6,11 +6,11 @@ import {
   ManyToMany,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import { Transition } from './transition.entity';
+import { Transaction } from './transaction.entity';
 
 @Entity()
 export class Category extends BaseEntity {
-  @ApiProperty({ example: '1', description: 'Unique identificator' })
+  @ApiProperty({ example: '1', description: 'id' })
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -18,6 +18,6 @@ export class Category extends BaseEntity {
   @Column()
   name: string;
 
-  @ManyToMany(() => Transition, (transition) => transition.categories)
-  transitions: Transition[];
+  @ManyToMany(() => Transaction, (transition) => transition.categories)
+  transitions: Transaction[];
 }

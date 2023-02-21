@@ -1,15 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BankDto, ChangeBalanceDto, UpdateBankDto } from 'src/dto/bank.dto';
 import { Bank } from 'src/entity/bank.entity';
-import { Transition } from 'src/entity/transition.entity';
-import { Repository } from 'typeorm';
+import { Transaction } from 'src/entity/transaction.entity';
 import {
-  BankFoundNameException,
-  BankMoneyException,
-  BankNotFoundException,
-  BankTransitionException,
-} from './bank.exeptions';
+  FoundNameException,
+  TransactionException,
+} from 'src/exeptions/global.exeptions';
+import { Repository } from 'typeorm';
+import { BankMoneyException } from './bank.exeptions';
 
 @Injectable()
 export class BankService {
@@ -17,8 +16,8 @@ export class BankService {
     @InjectRepository(Bank)
     private bankRepository: Repository<Bank>,
 
-    @InjectRepository(Transition)
-    private transitionRepository: Repository<Transition>,
+    @InjectRepository(Transaction)
+    private transactionRepository: Repository<Transaction>,
   ) {}
 
   async getById(id: number): Promise<Bank> {
@@ -33,7 +32,7 @@ export class BankService {
 
       return bank;
     } catch (e) {
-      throw new BankNotFoundException();
+      throw new NotFoundException('Bank');
     }
   }
 
@@ -57,7 +56,7 @@ export class BankService {
       const bank = await this.bankRepository.save(dto);
       return bank;
     } catch (e) {
-      throw new BankFoundNameException();
+      throw new FoundNameException('Bank');
     }
   }
 
@@ -81,15 +80,15 @@ export class BankService {
 
   async getBy(id: number) {
     try {
-      const transaction = await this.transitionRepository
-        .createQueryBuilder('transition')
-        .leftJoinAndSelect(`transition.bank`, `bank`)
-        .where(`transition.bank.id = :id`, { id: id })
+      const transaction = await this.transactionRepository
+        .createQueryBuilder('transaction')
+        .leftJoinAndSelect(`transaction.bank`, `bank`)
+        .where(`transaction.bank.id = :id`, { id: id })
         .getOne();
 
       if (transaction) throw new Error();
     } catch (e) {
-      throw new BankTransitionException();
+      throw new TransactionException('bank');
     }
   }
 
@@ -113,7 +112,7 @@ export class BankService {
 
       return bank.raw;
     } catch (e) {
-      throw new BankFoundNameException();
+      throw new FoundNameException('Bank');
     }
   }
 

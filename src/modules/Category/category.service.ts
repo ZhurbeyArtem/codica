@@ -1,14 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CategoryDto } from 'src/dto/category.dto';
 import { Category } from 'src/entity/category.entity';
-import { Transition } from 'src/entity/transition.entity';
-import { In, Repository } from 'typeorm';
+import { Transaction } from 'src/entity/transaction.entity';
 import {
-  CategoryFoundNameException,
-  CategoryNotFoundException,
-  CategoryTransitionException,
-} from './category.exeptions';
+  FoundNameException,
+  TransactionException,
+} from 'src/exeptions/global.exeptions';
+import { In, Repository } from 'typeorm';
 
 @Injectable()
 export class CategoryService {
@@ -16,8 +15,8 @@ export class CategoryService {
     @InjectRepository(Category)
     private categoryRepository: Repository<Category>,
 
-    @InjectRepository(Transition)
-    private transitionRepository: Repository<Transition>,
+    @InjectRepository(Transaction)
+    private transactionRepository: Repository<Transaction>,
   ) {}
 
   async getById(id: number): Promise<Category> {
@@ -32,7 +31,7 @@ export class CategoryService {
 
       return category;
     } catch (e) {
-      throw new CategoryNotFoundException();
+      throw new NotFoundException('Category');
     }
   }
 
@@ -60,7 +59,7 @@ export class CategoryService {
     try {
       return await this.categoryRepository.find({ where: { id: In(ids) } });
     } catch (e) {
-      throw new CategoryNotFoundException();
+      throw new NotFoundException('Category');
     }
   }
 
@@ -75,7 +74,7 @@ export class CategoryService {
       const category = await this.categoryRepository.save(dto);
       return category;
     } catch (e) {
-      throw new CategoryFoundNameException();
+      throw new FoundNameException('Category');
     }
   }
 
@@ -100,15 +99,15 @@ export class CategoryService {
 
   async getBy(id: number) {
     try {
-      const transaction = await this.transitionRepository
-        .createQueryBuilder('transition')
-        .leftJoinAndSelect(`transition.category`, `category`)
-        .where(`transition.category.id = :id`, { id: id })
+      const transaction = await this.transactionRepository
+        .createQueryBuilder('transaction')
+        .leftJoinAndSelect(`transaction.category`, `category`)
+        .where(`transaction.category.id = :id`, { id: id })
         .getOne();
 
       if (transaction) throw new Error();
     } catch (e) {
-      throw new CategoryTransitionException();
+      throw new TransactionException('category');
     }
   }
 
@@ -132,7 +131,7 @@ export class CategoryService {
 
       return category.raw;
     } catch (e) {
-      throw new CategoryFoundNameException();
+      throw new FoundNameException('Category');
     }
   }
 }

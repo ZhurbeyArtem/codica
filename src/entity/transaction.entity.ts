@@ -7,19 +7,18 @@ import {
   ManyToOne,
   JoinTable,
   CreateDateColumn,
-  JoinColumn,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { Bank } from './bank.entity';
 import { Category } from './category.entity';
 
 @Entity()
-export class Transition extends BaseEntity {
-  @ApiProperty({ example: '1', description: 'Unique identificator' })
+export class Transaction extends BaseEntity {
+  @ApiProperty({ example: '1', description: 'id' })
   @PrimaryGeneratedColumn({ type: 'int' })
   id: number;
 
-  @ApiProperty({ example: '1200$', description: 'amount' })
+  @ApiProperty({ example: '1200', description: 'amount' })
   @Column()
   amount: number;
 

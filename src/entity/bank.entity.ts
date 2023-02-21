@@ -6,11 +6,11 @@ import {
   OneToMany,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import { Transition } from './transition.entity';
+import { Transaction } from './transaction.entity';
 
 @Entity()
 export class Bank extends BaseEntity {
-  @ApiProperty({ example: '1', description: 'Unique identificator' })
+  @ApiProperty({ example: '1', description: 'Id' })
   @PrimaryGeneratedColumn({ type: 'int' })
   id: number;
 
@@ -18,12 +18,12 @@ export class Bank extends BaseEntity {
   @Column({ type: 'varchar', width: 40, unique: true })
   name: string;
 
-  @ApiProperty({ example: '1300$', description: 'balance' })
+  @ApiProperty({ example: '0', description: 'balance' })
   @Column({
     default: 0,
   })
   balance: number;
 
-  @OneToMany(() => Transition, (transition) => transition.bank)
-  transitions: Transition[];
+  @OneToMany(() => Transaction, (transition) => transition.bank)
+  transitions: Transaction[];
 }
