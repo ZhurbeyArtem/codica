@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { BankModule } from './modules/bank/bank.module';
 import { CategoryController } from './modules/category/category.controller';
 import { CategoryModule } from './modules/category/category.module';
+import { StatisticModule } from './modules/Statistic/statistic.module';
 import { TransitionModule } from './modules/transition/transition.module';
 
 @Module({
@@ -25,6 +26,7 @@ import { TransitionModule } from './modules/transition/transition.module';
     BankModule,
     CategoryModule,
     TransitionModule,
+    StatisticModule,
   ],
   providers: [],
 })

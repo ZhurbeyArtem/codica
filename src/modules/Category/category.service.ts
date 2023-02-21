@@ -2,10 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CategoryDto } from 'src/dto/category.dto';
 import { Category } from 'src/entity/category.entity';
+import { Transition } from 'src/entity/transition.entity';
 import { In, Repository } from 'typeorm';
 import {
   CategoryFoundNameException,
   CategoryNotFoundException,
+  CategoryTransitionException,
 } from './category.exeptions';
 
 @Injectable()
@@ -13,6 +15,9 @@ export class CategoryService {
   constructor(
     @InjectRepository(Category)
     private categoryRepository: Repository<Category>,
+
+    @InjectRepository(Transition)
+    private transitionRepository: Repository<Transition>,
   ) {}
 
   async getById(id: number): Promise<Category> {
@@ -78,6 +83,8 @@ export class CategoryService {
     try {
       await this.getById(id);
 
+      await this.getBy(id);
+
       await this.categoryRepository
         .createQueryBuilder('category')
         .delete()
@@ -87,7 +94,21 @@ export class CategoryService {
 
       return 'Category deletion completed successfully';
     } catch (e) {
-      throw new CategoryNotFoundException();
+      throw e;
+    }
+  }
+
+  async getBy(id: number) {
+    try {
+      const transaction = await this.transitionRepository
+        .createQueryBuilder('transition')
+        .leftJoinAndSelect(`transition.category`, `category`)
+        .where(`transition.category.id = :id`, { id: id })
+        .getOne();
+
+      if (transaction) throw new Error();
+    } catch (e) {
+      throw new CategoryTransitionException();
     }
   }
 

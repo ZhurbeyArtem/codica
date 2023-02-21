@@ -14,6 +14,15 @@ export class BankFoundNameException extends HttpException {
 
 export class BankMoneyException extends HttpException {
   constructor() {
-    super('The balance cannot be less than 0', HttpStatus.BAD_REQUEST);
+    super(
+      "You don't have enough money in your account",
+      HttpStatus.BAD_REQUEST,
+    );
+  }
+}
+
+export class BankTransitionException extends HttpException {
+  constructor() {
+    super('This bank have some transaction', HttpStatus.BAD_REQUEST);
   }
 }

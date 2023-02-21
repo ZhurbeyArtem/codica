@@ -1,12 +1,14 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BankDto, ChangeBalanceDto, UpdateBankDto } from 'src/dto/bank.dto';
 import { Bank } from 'src/entity/bank.entity';
+import { Transition } from 'src/entity/transition.entity';
 import { Repository } from 'typeorm';
 import {
   BankFoundNameException,
   BankMoneyException,
   BankNotFoundException,
+  BankTransitionException,
 } from './bank.exeptions';
 
 @Injectable()
@@ -14,6 +16,9 @@ export class BankService {
   constructor(
     @InjectRepository(Bank)
     private bankRepository: Repository<Bank>,
+
+    @InjectRepository(Transition)
+    private transitionRepository: Repository<Transition>,
   ) {}
 
   async getById(id: number): Promise<Bank> {
@@ -60,16 +65,31 @@ export class BankService {
     try {
       await this.getById(id);
 
+      await this.getBy(id);
+
       await this.bankRepository
         .createQueryBuilder('bank')
         .delete()
         .from(Bank)
         .where('id = :id', { id: id })
         .execute();
-
       return 'Bank deletion completed successfully';
     } catch (e) {
-      throw new BankNotFoundException();
+      throw e;
+    }
+  }
+
+  async getBy(id: number) {
+    try {
+      const transaction = await this.transitionRepository
+        .createQueryBuilder('transition')
+        .leftJoinAndSelect(`transition.bank`, `bank`)
+        .where(`transition.bank.id = :id`, { id: id })
+        .getOne();
+
+      if (transaction) throw new Error();
+    } catch (e) {
+      throw new BankTransitionException();
     }
   }
 
@@ -117,7 +137,8 @@ export class BankService {
 
       return newBank.raw;
     } catch (e) {
-      return new BankMoneyException();
+      console.log('+');
+      throw new BankMoneyException();
     }
   }
 }

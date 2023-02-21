@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Pagination } from 'src/dto/pagination.dto';
 import { TransitionDto } from 'src/dto/transition.dto';
@@ -14,8 +14,11 @@ export class TransitionService {
     @InjectRepository(Transition)
     private transitionRepository: Repository<Transition>,
 
-    private categoryService: CategoryService,
-    private bankService: BankService,
+    @Inject(CategoryService)
+    private readonly categoryService: CategoryService,
+
+    @Inject(BankService)
+    private readonly bankService: BankService,
   ) {}
 
   async getAll(dto: Pagination): Promise<transactionInterface> {
@@ -55,7 +58,6 @@ export class TransitionService {
 
       return transition;
     } catch (e) {
-      console.log(e.message);
       return e.message;
     }
   }
@@ -67,10 +69,6 @@ export class TransitionService {
         .leftJoinAndSelect('transition.bank', 'bank')
         .where('transition.id = :id', { id: id })
         .getOne();
-
-      // transaction.type = 'profitable'
-      //   ? (transaction.type = 'consumable')
-      //   : (transaction.type = 'profitable');
 
       await this.bankService.changeBalance(
         { type: transaction.type, amount: transaction.amount },
@@ -86,9 +84,19 @@ export class TransitionService {
 
       return 'Transaction deletion completed successfully';
     } catch (e) {
-      console.log('+')
-      console.log(e.message)
+      console.log('+');
+      console.log(e.message);
       return e;
     }
+  }
+
+  async getBy(id: number, model: string) {
+    const test = await this.transitionRepository
+      .createQueryBuilder('transition')
+      .leftJoinAndSelect(`transition.${model}`, `${model}`)
+      .where(`transition.${model}.id = :id`, { id: id })
+      .getOne();
+
+    console.log(test);
   }
 }

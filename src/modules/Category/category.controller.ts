@@ -31,7 +31,6 @@ export class CategoryController {
     return this.categoryService.getById(id);
   }
 
-
   @Delete(':id')
   delete(@Param('id', ParseIntPipe) id: number): Promise<string> {
     return this.categoryService.delCategory(id);

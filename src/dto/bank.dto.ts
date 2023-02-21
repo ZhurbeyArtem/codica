@@ -7,7 +7,7 @@ export class UpdateBankDto {
   readonly balance: number;
 }
 
-export class ChangeBalanceDto{
+export class ChangeBalanceDto {
   readonly type: string;
   readonly amount: number;
 }

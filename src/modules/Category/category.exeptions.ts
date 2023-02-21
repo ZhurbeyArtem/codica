@@ -10,3 +10,9 @@ export class CategoryFoundNameException extends HttpException {
     super('Category with same name already exist', HttpStatus.BAD_REQUEST);
   }
 }
+
+export class CategoryTransitionException extends HttpException {
+  constructor() {
+    super('This category have some transaction', HttpStatus.BAD_REQUEST);
+  }
+}
